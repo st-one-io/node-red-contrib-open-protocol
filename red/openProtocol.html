@@ -503,7 +503,6 @@
                 select_midGroup.change(() => {
                     controlaInterface();
                     atualizaOutputs();
-                    atualizaTips();
                     atualizaRevision();
                     select_revision.change();
                 });
@@ -520,8 +519,6 @@
 
                 function atualizaMidGroup() {
 
-                    select_midGroup.append($(`<option></option>`).val("").text(""));
-
                     base_midGroup.forEach(item => {
 
                         //issue #2 - Remove MidGroups 3 e 9999
@@ -529,34 +526,36 @@
                             return;
                         }
 
-                        let option = $(`<option></option>`).val(item).text(base[item].text);
+                        let option = $(`<option>`).val(item).text(base[item].text);
+                        select_midGroup.append(option);
 
                         if (node.midGroup === item) {
-                            option.attr('selected', 'selected');
+                            select_midGroup.val(item);
                         }
 
-                        select_midGroup.append(option);
                     });
 
                     if (node.midGroup === "Connect") {
-                        select_midGroup.append($(`<option></option>`).val("Connect").text("Connect").attr(
-                            'selected', 'selected'));
+                        select_midGroup.append($(`<option>`).val("Connect").text("Connect"));
+                        select_midGroup.val("Connect");
                     } else {
-                        select_midGroup.append($(`<option></option>`).val("Connect").text("Connect"));
+                        select_midGroup.append($(`<option>`).val("Connect").text("Connect"));
                     }
 
                     if (node.midGroup === "Custom") {
-                        select_midGroup.append($(`<option></option>`).val("Custom").text("Custom").attr(
-                            'selected', 'selected'));
+                        select_midGroup.append($(`<option>`).val("Custom").text("Custom"));
+                        select_midGroup.val("Custom");
                     } else {
-                        select_midGroup.append($(`<option></option>`).val("Custom").text("Custom"));
+                        select_midGroup.append($(`<option>`).val("Custom").text("Custom"));
+                    }
+
+                    if (select_midGroup.val() === "") {
+                        select_midGroup.val("11");
                     }
 
                 }
 
                 function atualizaRevision() {
-
-                    // console.log("Atualiza revision:", node.revision);
 
                     let localMidGroup = select_midGroup.val();
 
@@ -568,8 +567,6 @@
                     let base_revisions = detalhes.revisions;
 
                     select_revision.find("option").remove().end();
-
-                    // select_revision.append($(`<option></option>`).val("").text(""));
 
                     if (detalhes.params.length === 0) {
                         if (node.revision === "Auto") {
@@ -594,6 +591,10 @@
                         select_revision.val("Custom");
                     } else {
                         select_revision.append($("<option>").val("Custom").text("Custom"));
+                    }
+
+                    if(!base_revisions.includes(Number(node.revision)) && node.revision !== "Custom"){
+                        node.revision = undefined;
                     }
 
                     if(select_revision.val() === ""){
@@ -750,8 +751,6 @@
 
                     let localMidGroup = select_midGroup.val();
 
-                    // console.log("atualizaOutputs", localMidGroup);
-
                     if (!localMidGroup) {
                         return;
                     }
@@ -767,7 +766,6 @@
                     }
 
                     if (localMidGroup === "71"){
-                        console.log("Mid Alarm");
                         node.outputs = 4;
                         return;
                     }
