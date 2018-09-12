@@ -44,13 +44,13 @@
             }
         },
         "tips": {
-            "connect": "<h5>Connect control<\/h5><p>This option listen Open Protocol connection events.<\/p><p>To close the connection, send <code>msg.connect = false<\/code>.<\/p><p>To open the connection, send <code>msg.connect = true<\/code>.<\/p>",
-            "custom": "<h5>Custom Mode<\/h5><p>This option listen all information sent by the controller.<\/p><p>To send a customized MID follow this structure:<\/p><code>msg.mid = 80; // Number <br>msg.revision = 1; // Number<br>msg.payload = \"mid body\"; // String or Buffer<\/code>",
+            "connect": "<h5>Connection control<\/h5><p>This option listens to Open Protocol connection events.<\/p><p>To close the connection, send <code>msg.connect = false<\/code>.<\/p><p>To open the connection, send <code>msg.connect = true<\/code>.<\/p>",
+            "custom": "<h5>Custom Mode<\/h5><p>This option listens to all information sent by the controller.<\/p><p>To send a customized MID follow this structure:<\/p><code>msg.mid = 80; // Number <br>msg.revision = 1; // Number<br>msg.payload = \"mid body\"; // String or Buffer<\/code>",
             "not-implemented": "<p>Not implemented MID, check parameters from the documentation.<\/p><p>The parameters must be passed in a <code>String<\/code> on <code>msg.payload<\/code><\/p>",
             "not-params": "<p>This option does not require additional parameters.<\/p>",
             "subscribe": "<p>This option does not require additional parameters.<\/p><p>To perform an <code>Unsubscribe<\/code>, send a parameter <code>msg.subscribe = false<\/code>. Any other value of <code>input<\/code> will performe a <code>Subscribe<\/code>.<\/p>",
             "params": {
-                "header": "<p>This option does not require additional parameters.<\/p> <h5>Parameters<\/h5>",
+                "header": "<p>This option does require additional parameters.<\/p> <h5>Parameters<\/h5>",
                 "tags": {
                     "param": "Param",
                     "type": "Type",
