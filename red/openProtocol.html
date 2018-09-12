@@ -522,6 +522,12 @@
                     select_midGroup.append($(`<option></option>`).val("").text(""));
 
                     base_midGroup.forEach(item => {
+
+                        //issue #2 - Remove MidGroups 3 e 9999
+                        if (item === '3' || item === '9999' ){
+                            return;
+                        }
+
                         let option = $(`<option></option>`).val(item).text(base[item].text);
 
                         if (node.midGroup === item) {
