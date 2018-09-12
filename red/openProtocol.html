@@ -505,6 +505,7 @@
                     atualizaOutputs();
                     atualizaTips();
                     atualizaRevision();
+                    select_revision.change();
                 });
 
                 select_revision.change(() => {
@@ -568,33 +569,39 @@
 
                     select_revision.find("option").remove().end();
 
-                    select_revision.append($(`<option></option>`).val("").text(""));
+                    // select_revision.append($(`<option></option>`).val("").text(""));
 
                     if (detalhes.params.length === 0) {
                         if (node.revision === "Auto") {
-                            select_revision.append($(`<option></option>`).val("Auto").text("Auto").attr(
-                                'selected', 'selected'));
+                            select_revision.append($(`<option>`).val("Auto").text("Auto"));
+                            select_revision.val("Auto");
                         } else {
-                            select_revision.append($(`<option></option>`).val("Auto").text("Auto"));
+                            select_revision.append($(`<option>`).val("Auto").text("Auto"));
                         }
                     }
 
                     base_revisions.forEach(item => {
-
-                        let option = $(`<option></option>`).val(item.toString()).text(item);
+                        let option = $(`<option>`).val(item.toString()).text(item);
+                        select_revision.append(option);
 
                         if (node.revision === item.toString()) {
-                            option.attr('selected', 'selected')
+                            select_revision.val(item.toString());
                         }
-
-                        select_revision.append(option);
                     });
 
                     if (node.revision === "Custom") {
-                        select_revision.append($(`<option></option>`).val("Custom").text("Custom").attr(
-                            'selected', 'selected'));
+                        select_revision.append($("<option>").val("Custom").text("Custom"));
+                        select_revision.val("Custom");
                     } else {
-                        select_revision.append($(`<option></option>`).val("Custom").text("Custom"));
+                        select_revision.append($("<option>").val("Custom").text("Custom"));
+                    }
+
+                    if(select_revision.val() === ""){
+                        select_revision.val("Auto");
+                    }
+
+                    if(select_revision.val() === ""){
+                        select_revision.val("1");
                     }
                 }
 
