@@ -173,7 +173,7 @@
                 required: true
             },
             controllerPort: {
-                value: 0,
+                value: 4545,
                 required: true
             },
             keepAlive: {
@@ -503,8 +503,8 @@
                 select_midGroup.change(() => {
                     controlaInterface();
                     atualizaOutputs();
-                    atualizaTips();
                     atualizaRevision();
+                    select_revision.change();
                 });
 
                 select_revision.change(() => {
@@ -519,37 +519,43 @@
 
                 function atualizaMidGroup() {
 
-                    select_midGroup.append($(`<option></option>`).val("").text(""));
-
                     base_midGroup.forEach(item => {
-                        let option = $(`<option></option>`).val(item).text(base[item].text);
 
-                        if (node.midGroup === item) {
-                            option.attr('selected', 'selected');
+                        //issue #2 - Remove MidGroups 3 e 9999
+                        if (item === '3' || item === '9999' ){
+                            return;
                         }
 
+                        let option = $(`<option>`).val(item).text(base[item].text);
                         select_midGroup.append(option);
+
+                        if (node.midGroup === item) {
+                            select_midGroup.val(item);
+                        }
+
                     });
 
                     if (node.midGroup === "Connect") {
-                        select_midGroup.append($(`<option></option>`).val("Connect").text("Connect").attr(
-                            'selected', 'selected'));
+                        select_midGroup.append($(`<option>`).val("Connect").text("Connect"));
+                        select_midGroup.val("Connect");
                     } else {
-                        select_midGroup.append($(`<option></option>`).val("Connect").text("Connect"));
+                        select_midGroup.append($(`<option>`).val("Connect").text("Connect"));
                     }
 
                     if (node.midGroup === "Custom") {
-                        select_midGroup.append($(`<option></option>`).val("Custom").text("Custom").attr(
-                            'selected', 'selected'));
+                        select_midGroup.append($(`<option>`).val("Custom").text("Custom"));
+                        select_midGroup.val("Custom");
                     } else {
-                        select_midGroup.append($(`<option></option>`).val("Custom").text("Custom"));
+                        select_midGroup.append($(`<option>`).val("Custom").text("Custom"));
+                    }
+
+                    if (select_midGroup.val() === "") {
+                        select_midGroup.val("11");
                     }
 
                 }
 
                 function atualizaRevision() {
-
-                    // console.log("Atualiza revision:", node.revision);
 
                     let localMidGroup = select_midGroup.val();
 
@@ -562,33 +568,41 @@
 
                     select_revision.find("option").remove().end();
 
-                    select_revision.append($(`<option></option>`).val("").text(""));
-
                     if (detalhes.params.length === 0) {
                         if (node.revision === "Auto") {
-                            select_revision.append($(`<option></option>`).val("Auto").text("Auto").attr(
-                                'selected', 'selected'));
+                            select_revision.append($(`<option>`).val("Auto").text("Auto"));
+                            select_revision.val("Auto");
                         } else {
-                            select_revision.append($(`<option></option>`).val("Auto").text("Auto"));
+                            select_revision.append($(`<option>`).val("Auto").text("Auto"));
                         }
                     }
 
                     base_revisions.forEach(item => {
-
-                        let option = $(`<option></option>`).val(item.toString()).text(item);
+                        let option = $(`<option>`).val(item.toString()).text(item);
+                        select_revision.append(option);
 
                         if (node.revision === item.toString()) {
-                            option.attr('selected', 'selected')
+                            select_revision.val(item.toString());
                         }
-
-                        select_revision.append(option);
                     });
 
                     if (node.revision === "Custom") {
-                        select_revision.append($(`<option></option>`).val("Custom").text("Custom").attr(
-                            'selected', 'selected'));
+                        select_revision.append($("<option>").val("Custom").text("Custom"));
+                        select_revision.val("Custom");
                     } else {
-                        select_revision.append($(`<option></option>`).val("Custom").text("Custom"));
+                        select_revision.append($("<option>").val("Custom").text("Custom"));
+                    }
+
+                    if(!base_revisions.includes(Number(node.revision)) && node.revision !== "Custom"){
+                        node.revision = undefined;
+                    }
+
+                    if(select_revision.val() === ""){
+                        select_revision.val("Auto");
+                    }
+
+                    if(select_revision.val() === ""){
+                        select_revision.val("1");
                     }
                 }
 
@@ -737,8 +751,6 @@
 
                     let localMidGroup = select_midGroup.val();
 
-                    // console.log("atualizaOutputs", localMidGroup);
-
                     if (!localMidGroup) {
                         return;
                     }
@@ -754,7 +766,6 @@
                     }
 
                     if (localMidGroup === "71"){
-                        console.log("Mid Alarm");
                         node.outputs = 4;
                         return;
                     }
