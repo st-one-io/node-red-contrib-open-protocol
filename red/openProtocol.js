@@ -78,11 +78,11 @@ module.exports = function (RED) {
 
         node.connect = function connect() {
 
-            console.log("Connect");
-
             if (node.connectionStatus) {
                 return;
             }
+
+            clearTimeout(node.timerReconnect);
 
             node.op = openProtocol.createClient(node.controllerPort, node.controllerIP, opts, (data) => node.onConnect(data));
             node.op.on("error", (err) => node.onErrorOP(err));
@@ -91,8 +91,6 @@ module.exports = function (RED) {
         node.connect();
 
         node.onConnect = function onConnect(data) {
-
-            console.log(`Open Protocol Connected to ${node.controllerIP}:${node.controllerPort}`);
 
             clearTimeout(node.timerReconnect);
 
@@ -119,8 +117,6 @@ module.exports = function (RED) {
 
         node.reconnect = function reconnect() {
 
-            console.log("Reconnect", node.onClose, node.userDisconnect, node.connectionStatus);
-
             clearTimeout(node.timerReconnect);
 
             if (node.onClose || node.userDisconnect || node.connectionStatus) {
@@ -130,15 +126,12 @@ module.exports = function (RED) {
             node.connect();
         };
 
-
         // Begin::Event of Session Control Client - Open Protocol
         node.onErrorOP = function onErrorOP(error) {
 
             if (node.onClose) {
                 return;
             }
-
-            // if (error.code === "ECONNREFUSED" || error.code === "ETIMEDOUT" || error.code === "ENETUNREACH") {
 
             node.connectionStatus = false;
 
@@ -150,16 +143,9 @@ module.exports = function (RED) {
 
             clearTimeout(node.timerReconnect);
             node.timerReconnect = setTimeout(() => node.reconnect(), 5000);
-
-            //     return;
-            // }
-
-            // node.error(error);
         };
 
         node.onCloseOP = function onCloseOP(error) {
-
-            console.log("onCloseOP");
 
             if (node.onClose) {
                 return;
@@ -172,7 +158,6 @@ module.exports = function (RED) {
 
             clearTimeout(node.timerReconnect);
             node.timerReconnect = setTimeout(() => node.reconnect(), 5000);
-
         };
 
         node.onConnectOP = function onConnectOP(data) {
@@ -196,7 +181,6 @@ module.exports = function (RED) {
         };
         // End::Event of Session Control Client - Open Protocol
 
-
         node.on("close", () => {
 
             node.onClose = true;
@@ -209,7 +193,6 @@ module.exports = function (RED) {
             node.op.close();
 
         });
-
     }
 
     RED.nodes.registerType("op config", OpenProtocolConfig);
