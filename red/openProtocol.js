@@ -78,6 +78,8 @@ module.exports = function (RED) {
 
         node.connect = function connect() {
 
+            console.log("Connect");
+
             if (node.connectionStatus) {
                 return;
             }
@@ -89,6 +91,8 @@ module.exports = function (RED) {
         node.connect();
 
         node.onConnect = function onConnect(data) {
+
+            console.log(`Open Protocol Connected to ${node.controllerIP}:${node.controllerPort}`);
 
             clearTimeout(node.timerReconnect);
 
@@ -115,6 +119,8 @@ module.exports = function (RED) {
 
         node.reconnect = function reconnect() {
 
+            console.log("Reconnect", node.onClose, node.userDisconnect, node.connectionStatus);
+
             clearTimeout(node.timerReconnect);
 
             if (node.onClose || node.userDisconnect || node.connectionStatus) {
@@ -132,26 +138,28 @@ module.exports = function (RED) {
                 return;
             }
 
-            if (error.code === "ECONNREFUSED" || error.code === "ETIMEDOUT") {
+            // if (error.code === "ECONNREFUSED" || error.code === "ETIMEDOUT" || error.code === "ENETUNREACH") {
 
-                node.connectionStatus = false;
+            node.connectionStatus = false;
 
-                node.emit("disconnect");
+            node.emit("disconnect");
 
-                node.error(`${RED._("open-protocol.message.failed-connect")} ${error.address}:${error.port}`);
+            node.error(`${RED._("open-protocol.message.failed-connect")} ${error.address}:${error.port} ${error.code}`);
 
-                node.removeListenersOP();
+            node.removeListenersOP();
 
-                clearTimeout(node.timerReconnect);
-                node.timerReconnect = setTimeout(() => node.reconnect(), 5000);
+            clearTimeout(node.timerReconnect);
+            node.timerReconnect = setTimeout(() => node.reconnect(), 5000);
 
-                return;
-            }
+            //     return;
+            // }
 
-            node.error(error);
+            // node.error(error);
         };
 
         node.onCloseOP = function onCloseOP(error) {
+
+            console.log("onCloseOP");
 
             if (node.onClose) {
                 return;
