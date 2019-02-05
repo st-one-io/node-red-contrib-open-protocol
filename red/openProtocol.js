@@ -315,15 +315,22 @@ module.exports = function (RED) {
 
                 node.config.op.sendMid(msg.mid, opts)
                     .then(data => {
-                        msg.payload = data.payload;
-                        setMessage(msg, data);
+
+                        if (data) {
+                            msg.payload = data.payload;
+                            setMessage(msg, data);
+                        }
+
                         node.send([msg, null]);
                     })
                     .catch(err => {
-                        msg.error = err;
+
+                        msg.error = err.stack || err;
+
                         if (node.forwardErrors) {
                             node.send([msg, null]);
                         }
+
                         node.error(RED._("open-protocol.message.error-send-mid"), msg);
                     });
 
