@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-open-protocol",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Node-RED node to interface with other systems using the Open Protocol",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "author": "Smart-Tech",
   "license": "ISC",
   "dependencies": {
-    "node-open-protocol": "^1.0.0"
+    "node-open-protocol": "^1.1.0"
   },
   "keywords": [
     "hardware",
