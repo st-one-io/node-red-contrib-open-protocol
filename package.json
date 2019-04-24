@@ -13,7 +13,7 @@
   "author": "Smart-Tech",
   "license": "ISC",
   "dependencies": {
-    "node-open-protocol": "^1.0.0"
+    "node-open-protocol": "^1.1.0"
   },
   "keywords": [
     "hardware",
