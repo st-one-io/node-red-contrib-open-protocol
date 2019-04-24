@@ -82,6 +82,8 @@ module.exports = function (RED) {
                 return;
             }
 
+            clearTimeout(node.timerReconnect);
+
             node.op = openProtocol.createClient(node.controllerPort, node.controllerIP, opts, (data) => node.onConnect(data));
             node.op.on("error", (err) => node.onErrorOP(err));
         };
@@ -124,7 +126,6 @@ module.exports = function (RED) {
             node.connect();
         };
 
-
         // Begin::Event of Session Control Client - Open Protocol
         node.onErrorOP = function onErrorOP(error) {
 
@@ -132,23 +133,16 @@ module.exports = function (RED) {
                 return;
             }
 
-            if (error.code === "ECONNREFUSED" || error.code === "ETIMEDOUT") {
+            node.connectionStatus = false;
 
-                node.connectionStatus = false;
+            node.emit("disconnect");
 
-                node.emit("disconnect");
+            node.error(`${RED._("open-protocol.message.failed-connect")} ${error.address}:${error.port} ${error.code}`);
 
-                node.error(`${RED._("open-protocol.message.failed-connect")} ${error.address}:${error.port}`);
+            node.removeListenersOP();
 
-                node.removeListenersOP();
-
-                clearTimeout(node.timerReconnect);
-                node.timerReconnect = setTimeout(() => node.reconnect(), 5000);
-
-                return;
-            }
-
-            node.error(error);
+            clearTimeout(node.timerReconnect);
+            node.timerReconnect = setTimeout(() => node.reconnect(), 5000);
         };
 
         node.onCloseOP = function onCloseOP(error) {
@@ -164,7 +158,6 @@ module.exports = function (RED) {
 
             clearTimeout(node.timerReconnect);
             node.timerReconnect = setTimeout(() => node.reconnect(), 5000);
-
         };
 
         node.onConnectOP = function onConnectOP(data) {
@@ -188,7 +181,6 @@ module.exports = function (RED) {
         };
         // End::Event of Session Control Client - Open Protocol
 
-
         node.on("close", () => {
 
             node.onClose = true;
@@ -201,7 +193,6 @@ module.exports = function (RED) {
             node.op.close();
 
         });
-
     }
 
     RED.nodes.registerType("op config", OpenProtocolConfig);
