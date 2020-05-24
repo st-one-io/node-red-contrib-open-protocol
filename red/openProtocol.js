@@ -244,7 +244,13 @@ module.exports = function (RED) {
             let message = {};
             message.payload = data.payload;
             setMessage(message, data);
-            node.send([null, message]);
+
+            if (node.midGroup === "Custom") {
+                node.send(message);
+            } else {
+                node.send([null, message]);
+            }
+
         };
 
         node.onSubscribe = function onSubscribe(data) {
@@ -293,17 +299,15 @@ module.exports = function (RED) {
                 };
 
                 node.config.op.sendMid(msg.mid, opts)
-                    .then(data => {
-                        msg.payload = data.payload;
-                        setMessage(msg, data);
-                        node.send([msg, null]);
-                    })
                     .catch(err => {
-                        msg.error = err;
+
+                        msg.error = err.stack || err;
+
                         if (node.forwardErrors) {
                             node.send([msg, null]);
                         }
-                        node.error(RED._("open-protocol.message.error-send-mid"), msg);
+
+                        node.error(`${RED._("open-protocol.message.error-send-mid")} - ${err}`, msg);
                     });
 
                 return;
@@ -365,11 +369,11 @@ module.exports = function (RED) {
                             node.send(msg);
                         })
                         .catch(err => {
-                            msg.error = err;
+                            msg.error = err.stack || err;
                             if (node.forwardErrors) {
                                 node.send(msg);
                             }
-                            node.error(RED._("open-protocol.message.error-request") + err, msg);
+                            node.error(`${RED._("open-protocol.message.error-request")} - ${err}`, msg);
                         });
 
                     break;
@@ -392,11 +396,11 @@ module.exports = function (RED) {
                                 }
                             })
                             .catch(err => {
-                                msg.error = err;
+                                msg.error = err.stack || err;
                                 if (node.forwardErrors) {
                                     node.send([msg, null]);
                                 }
-                                node.error(RED._("open-protocol.message.error-unsubscribe"), msg);
+                                node.error(`${RED._("open-protocol.message.error-unsubscribe")} - ${err}`, msg);
                             });
 
                         return;
@@ -417,12 +421,12 @@ module.exports = function (RED) {
                             }
                         })
                         .catch(err => {
-                            msg.error = err;
+                            msg.error = err.stack || err;
                             if (node.forwardErrors) {
                                 node.send([msg, null]);
                             }
 
-                            node.error(RED._("open-protocol.message.error-subscribe"), msg);
+                            node.error(`${RED._("open-protocol.message.error-subscribe")} - ${err}`, msg);
                         });
 
                     break;
@@ -435,11 +439,11 @@ module.exports = function (RED) {
                             node.send(msg);
                         })
                         .catch(err => {
-                            msg.error = err;
+                            msg.error = err.stack || err;
                             if (node.forwardErrors) {
                                 node.send(msg);
                             }
-                            node.error(RED._("open-protocol.message.error-command"), msg);
+                            node.error(`${RED._("open-protocol.message.error-command")} - ${err}`, msg);
                         });
 
                     break;
