@@ -5,7 +5,7 @@
 */
 
 const fs = require('fs');
-const op = require('open-protocol');
+const op = require('node-open-protocol');
 const dataMids = op.helpers.getMids();
 
 let mids = {};
