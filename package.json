@@ -22,6 +22,12 @@
     "communication",
     "controller",
     "atlas-copco",
+    "power-focus",
+    "power-macs",
+    "stanley",
+    "desoutter",
+    "cleco",
+    "estic",
     "node-red"
   ],
   "node-red": {
