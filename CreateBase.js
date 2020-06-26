@@ -5,7 +5,12 @@
 */
 
 const fs = require('fs');
-const op = require('node-open-protocol');
+/*
+  Copyright: (c) 2020, Jeremy London
+  GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+*/
+// Use desoutter modified packaged
+const op = require('node-open-protocol-desoutter');
 const dataMids = op.helpers.getMids();
 
 let mids = {};

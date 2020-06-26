@@ -1,5 +1,5 @@
 {
-  "name": "node-red-contrib-open-protocol",
+  "name": "node-red-contrib-open-protocol-desoutter",
   "version": "1.0.2",
   "description": "A Node-RED node to interface with other systems using the Open Protocol",
   "main": "index.js",
@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/netsmarttech/node-red-contrib-open-protocol.git"
+    "url": "https://github.com/jeremy-london/node-red-contrib-open-protocol-desoutter.git"
   },
   "author": "Smart-Tech",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "node-open-protocol": "^1.1.0"
+    "node-open-protocol-desoutter": "^1.2.0"
   },
   "keywords": [
     "hardware",
