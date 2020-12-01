@@ -17,6 +17,13 @@ module.exports = function(RED) {
   // <Begin> --- Config ---
   function OpenProtocolConfig(values) {
     EventEmitter.call(this);
+    /**
+     *
+      Default listener count is 10, but if more is requested in the config, a memory leak error is thrown
+      60 is needed per Desoutter controller
+     *
+    **/
+    EventEmitter.defaultMaxListeners = 60;
     RED.nodes.createNode(this, values);
 
     const node = this;
